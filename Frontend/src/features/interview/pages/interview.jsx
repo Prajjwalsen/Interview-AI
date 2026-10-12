@@ -1,195 +1,427 @@
-import React, { useState, useEffect } from 'react'
-import '../style/interview.scss'
-import { useInterview } from '../hooks/useInterview.js'
-import { useNavigate, useParams } from 'react-router'
 
-
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import "../style/interview.scss";
+import { useInterview } from "../hooks/useInterview.js";
 
 const NAV_ITEMS = [
-    { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
-    { id: 'behavioral', label: 'Behavioral Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>) },
-    { id: 'roadmap', label: 'Road Map', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11" /></svg>) },
-]
+    {
+        id: "technical",
+        label: "Technical Questions",
+        icon: "code",
+    },
+    {
+        id: "hr",
+        label: "HR Questions",
+        icon: "users",
+    },
+    {
+        id: "behavioral",
+        label: "Behavioral Questions",
+        icon: "message",
+    },
+    {
+        id: "roadmap",
+        label: "Learning Roadmap",
+        icon: "roadmap",
+    },
+];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
 const QuestionCard = ({ item, index }) => {
-    const [ open, setOpen ] = useState(false)
+    const [open, setOpen] = useState(false);
+
     return (
-        <div className='q-card'>
-            <div className='q-card__header' onClick={() => setOpen(o => !o)}>
-                <span className='q-card__index'>Q{index + 1}</span>
-                <p className='q-card__question'>{item.question}</p>
-                <span className={`q-card__chevron ${open ? 'q-card__chevron--open' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+        <article className="q-card">
+            <button
+                type="button"
+                className="q-card__header"
+                onClick={() => setOpen((previous) => !previous)}
+                aria-expanded={open}
+            >
+                <span className="q-card__index">
+                    Q{index + 1}
                 </span>
-            </div>
+
+                <span className="q-card__question">
+                    {item.question || "Question unavailable"}
+                </span>
+
+                <span
+                    className={`q-card__chevron ${
+                        open ? "q-card__chevron--open" : ""
+                    }`}
+                    aria-hidden="true"
+                >
+                    {open ? "−" : "+"}
+                </span>
+            </button>
+
             {open && (
-                <div className='q-card__body'>
-                    <div className='q-card__section'>
-                        <span className='q-card__tag q-card__tag--intention'>Intention</span>
-                        <p>{item.intention}</p>
+                <div className="q-card__body">
+                    <div className="q-card__section">
+                        <span className="q-card__tag q-card__tag--intention">
+                            Interviewer's Intention
+                        </span>
+
+                        <p>
+                            {item.intention ||
+                                "The intention has not been provided."}
+                        </p>
                     </div>
-                    <div className='q-card__section'>
-                        <span className='q-card__tag q-card__tag--answer'>Model Answer</span>
-                        <p>{item.answer}</p>
+
+                    <div className="q-card__section">
+                        <span className="q-card__tag q-card__tag--answer">
+                            Suggested Answer
+                        </span>
+
+                        <p>
+                            {item.answer ||
+                                "A sample answer is not available."}
+                        </p>
                     </div>
                 </div>
             )}
-        </div>
-    )
-}
+        </article>
+    );
+};
 
-const RoadMapDay = ({ day }) => (
-    <div className='roadmap-day'>
-        <div className='roadmap-day__header'>
-            <span className='roadmap-day__badge'>Day {day.day}</span>
-            <h3 className='roadmap-day__focus'>{day.focus}</h3>
-        </div>
-        <ul className='roadmap-day__tasks'>
-            {day.tasks.map((task, i) => (
-                <li key={i}>
-                    <span className='roadmap-day__bullet' />
-                    {task}
-                </li>
-            ))}
-        </ul>
-    </div>
-)
-
-// ── Main Component ────────────────────────────────────────────────────────────
-const Interview = () => {
-    const [ activeNav, setActiveNav ] = useState('technical')
-    const { report, getReportById, loading, getResumePdf } = useInterview()
-    const { interviewId } = useParams()
-
-    useEffect(() => {
-        if (interviewId) {
-            getReportById(interviewId)
-        }
-    }, [ interviewId ])
-
-
-
-    if (loading || !report) {
-        return (
-            <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
-            </main>
-        )
-    }
-
-    const scoreColor =
-        report.matchScore >= 80 ? 'score--high' :
-            report.matchScore >= 60 ? 'score--mid' : 'score--low'
-
+const RoadMapDay = ({ day }) => {
+    const tasks = Array.isArray(day.tasks) ? day.tasks : [];
 
     return (
-        <div className='interview-page'>
-            <div className='interview-layout'>
+        <article className="roadmap-day">
+            <div className="roadmap-day__header">
+                <span className="roadmap-day__badge">
+                    Day {day.day}
+                </span>
 
-                {/* ── Left Nav ── */}
-                <nav className='interview-nav'>
+                <h3 className="roadmap-day__focus">
+                    {day.focus || "Preparation"}
+                </h3>
+            </div>
+
+            {tasks.length > 0 ? (
+                <ul className="roadmap-day__tasks">
+                    {tasks.map((task, index) => (
+                        <li key={`${day.day}-${index}`}>
+                            <span className="roadmap-day__bullet" />
+                            {task}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No preparation tasks are available for this day.</p>
+            )}
+        </article>
+    );
+};
+
+const Interview = () => {
+    const [activeNav, setActiveNav] = useState("technical");
+
+    const {
+        report,
+        loading,
+        getResumePdf,
+    } = useInterview();
+
+    const navigate = useNavigate();
+
+    // Protect the UI when optional fields are missing.
+    const technicalQuestions = Array.isArray(report?.technicalQuestions)
+        ? report.technicalQuestions
+        : [];
+
+    const hrQuestions = Array.isArray(report?.hrQuestions)
+        ? report.hrQuestions
+        : [];
+
+    const behavioralQuestions = Array.isArray(report?.behavioralQuestions)
+        ? report.behavioralQuestions
+        : [];
+
+    const preparationPlan = Array.isArray(report?.preparationPlan)
+        ? report.preparationPlan
+        : [];
+
+    const skillGaps = Array.isArray(report?.skillGaps)
+        ? report.skillGaps
+        : [];
+
+    const score = Number(report?.matchScore);
+
+    const hasMatchScore =
+        report?.matchScore !== null &&
+        report?.matchScore !== undefined &&
+        Number.isFinite(score) &&
+        score >= 0 &&
+        score <= 100;
+
+    const scoreColor = !hasMatchScore
+        ? ""
+        : score >= 80
+        ? "score--high"
+        : score >= 60
+        ? "score--mid"
+        : "score--low";
+
+    const scoreDescription = !hasMatchScore
+        ? "Match score is not available"
+        : score >= 80
+        ? "Strong profile alignment"
+        : score >= 60
+        ? "Moderate profile alignment"
+        : "Improvement opportunities identified";
+
+    const questionsBySection = {
+        technical: technicalQuestions,
+        hr: hrQuestions,
+        behavioral: behavioralQuestions,
+    };
+
+    const activeQuestions = questionsBySection[activeNav];
+
+    const handleDownloadResume = async () => {
+        try {
+            await getResumePdf(report._id);
+        } catch (error) {
+            console.error("Resume download failed:", error);
+            window.alert(
+                "Unable to download the resume. Please try again."
+            );
+        }
+    };
+
+    if (loading) {
+        return (
+            <main className="loading-screen">
+                <h1>Loading your interview plan...</h1>
+                <p>
+                    Please wait while your report is being loaded.
+                </p>
+            </main>
+        );
+    }
+
+    if (!report) {
+        return (
+            <main className="loading-screen">
+                <h1>Interview report not found</h1>
+
+                <p>
+                    The report could not be loaded. It may not exist
+                    or may no longer be accessible.
+                </p>
+
+                <button
+                    type="button"
+                    className="button primary-button"
+                    onClick={() => navigate("/")}
+                >
+                    Back to Home
+                </button>
+            </main>
+        );
+    }
+
+    return (
+        <div className="interview-page">
+            <div className="interview-layout">
+
+                {/* Left Navigation */}
+                <nav className="interview-nav">
                     <div className="nav-content">
-                        <p className='interview-nav__label'>Sections</p>
-                        {NAV_ITEMS.map(item => (
+                        <p className="interview-nav__label">
+                            Interview Preparation
+                        </p>
+
+                        {NAV_ITEMS.map((item) => (
                             <button
+                                type="button"
                                 key={item.id}
-                                className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
+                                className={`interview-nav__item ${
+                                    activeNav === item.id
+                                        ? "interview-nav__item--active"
+                                        : ""
+                                }`}
                                 onClick={() => setActiveNav(item.id)}
                             >
-                                <span className='interview-nav__icon'>{item.icon}</span>
+                                <span className="interview-nav__icon">
+                                    {item.icon === "code" && "‹ / ›"}
+                                    {item.icon === "users" && "♙"}
+                                    {item.icon === "message" && "☏"}
+                                    {item.icon === "roadmap" && "↗"}
+                                </span>
+
                                 {item.label}
                             </button>
                         ))}
                     </div>
+
                     <button
-                        onClick={() => { getResumePdf(interviewId) }}
-                        className='button primary-button' >
-                        <svg height={"0.8rem"} style={{ marginRight: "0.8rem" }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.6144 17.7956 11.492 15.7854C12.2731 13.9966 13.6789 12.5726 15.4325 11.7942L17.8482 10.7219C18.6162 10.381 18.6162 9.26368 17.8482 8.92277L15.5079 7.88394C13.7092 7.08552 12.2782 5.60881 11.5105 3.75894L10.6215 1.61673C10.2916.821765 9.19319.821767 8.8633 1.61673L7.97427 3.75892C7.20657 5.60881 5.77553 7.08552 3.97685 7.88394L1.63658 8.92277C.868537 9.26368.868536 10.381 1.63658 10.7219L4.0523 11.7942C5.80589 12.5726 7.21171 13.9966 7.99275 15.7854L8.8704 17.7956C9.20776 18.5682 10.277 18.5682 10.6144 17.7956ZM19.4014 22.6899 19.6482 22.1242C20.0882 21.1156 20.8807 20.3125 21.8695 19.8732L22.6299 19.5353C23.0412 19.3526 23.0412 18.7549 22.6299 18.5722L21.9121 18.2532C20.8978 17.8026 20.0911 16.9698 19.6586 15.9269L19.4052 15.3156C19.2285 14.8896 18.6395 14.8896 18.4628 15.3156L18.2094 15.9269C17.777 16.9698 16.9703 17.8026 15.956 18.2532L15.2381 18.5722C14.8269 18.7549 14.8269 19.3526 15.2381 19.5353L15.9985 19.8732C16.9874 20.3125 17.7798 21.1156 18.2198 22.1242L18.4667 22.6899C18.6473 23.104 19.2207 23.104 19.4014 22.6899Z"></path></svg>
+                        type="button"
+                        onClick={handleDownloadResume}
+                        className="button primary-button"
+                    >
                         Download Resume
                     </button>
                 </nav>
 
-                <div className='interview-divider' />
+                <div className="interview-divider" />
 
-                {/* ── Center Content ── */}
-                <main className='interview-content'>
-                    {activeNav === 'technical' && (
+                {/* Main Content */}
+                <main className="interview-content">
+
+                    {questionsBySection[activeNav] && (
                         <section>
-                            <div className='content-header'>
-                                <h2>Technical Questions</h2>
-                                <span className='content-header__count'>{report.technicalQuestions.length} questions</span>
+                            <div className="content-header">
+                                <h2>
+                                    {NAV_ITEMS.find(
+                                        (item) => item.id === activeNav
+                                    )?.label}
+                                </h2>
+
+                                <span className="content-header__count">
+                                    {activeQuestions.length} questions
+                                </span>
                             </div>
-                            <div className='q-list'>
-                                {report.technicalQuestions.map((q, i) => (
-                                    <QuestionCard key={i} item={q} index={i} />
-                                ))}
-                            </div>
+
+                            {activeQuestions.length > 0 ? (
+                                <div className="q-list">
+                                    {activeQuestions.map((question, index) => (
+                                        <QuestionCard
+                                            key={`${activeNav}-${index}`}
+                                            item={question}
+                                            index={index}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="empty-state">
+                                    <h3>No questions available yet</h3>
+
+                                    <p>
+                                        This section contains no saved
+                                        questions. Generate a new report
+                                        after the AI question generator
+                                        has been configured.
+                                    </p>
+                                </div>
+                            )}
                         </section>
                     )}
 
-                    {activeNav === 'behavioral' && (
+                    {activeNav === "roadmap" && (
                         <section>
-                            <div className='content-header'>
-                                <h2>Behavioral Questions</h2>
-                                <span className='content-header__count'>{report.behavioralQuestions.length} questions</span>
-                            </div>
-                            <div className='q-list'>
-                                {report.behavioralQuestions.map((q, i) => (
-                                    <QuestionCard key={i} item={q} index={i} />
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                            <div className="content-header">
+                                <h2>Personalized Learning Roadmap</h2>
 
-                    {activeNav === 'roadmap' && (
-                        <section>
-                            <div className='content-header'>
-                                <h2>Preparation Road Map</h2>
-                                <span className='content-header__count'>{report.preparationPlan.length}-day plan</span>
+                                <span className="content-header__count">
+                                    {preparationPlan.length} days
+                                </span>
                             </div>
-                            <div className='roadmap-list'>
-                                {report.preparationPlan.map((day) => (
-                                    <RoadMapDay key={day.day} day={day} />
-                                ))}
-                            </div>
+
+                            {preparationPlan.length > 0 ? (
+                                <div className="roadmap-list">
+                                    {preparationPlan.map((day, index) => (
+                                        <RoadMapDay
+                                            key={day.day ?? index}
+                                            day={day}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="empty-state">
+                                    <h3>No learning roadmap available</h3>
+
+                                    <p>
+                                        The saved report does not contain
+                                        a preparation plan yet.
+                                    </p>
+                                </div>
+                            )}
                         </section>
                     )}
                 </main>
 
-                <div className='interview-divider' />
+                <div className="interview-divider" />
 
-                {/* ── Right Sidebar ── */}
-                <aside className='interview-sidebar'>
+                {/* Right Sidebar */}
+                <aside className="interview-sidebar">
+                    <div className="match-score">
+                        <p className="match-score__label">
+                            Resume–Job Match Score
+                        </p>
 
-                    {/* Match Score */}
-                    <div className='match-score'>
-                        <p className='match-score__label'>Match Score</p>
-                        <div className={`match-score__ring ${scoreColor}`}>
-                            <span className='match-score__value'>{report.matchScore}</span>
-                            <span className='match-score__pct'>%</span>
-                        </div>
-                        <p className='match-score__sub'>Strong match for this role</p>
-                    </div>
+                        <div
+                            className={`match-score__ring ${scoreColor}`}
+                        >
+                            <span className="match-score__value">
+                                {hasMatchScore ? score : "—"}
+                            </span>
 
-                    <div className='sidebar-divider' />
-
-                    {/* Skill Gaps */}
-                    <div className='skill-gaps'>
-                        <p className='skill-gaps__label'>Skill Gaps</p>
-                        <div className='skill-gaps__list'>
-                            {report.skillGaps.map((gap, i) => (
-                                <span key={i} className={`skill-tag skill-tag--${gap.severity}`}>
-                                    {gap.skill}
+                            {hasMatchScore && (
+                                <span className="match-score__pct">
+                                    %
                                 </span>
-                            ))}
+                            )}
                         </div>
+
+                        <p className="match-score__sub">
+                            {scoreDescription}
+                        </p>
                     </div>
 
+                    <div className="sidebar-divider" />
+
+                    <div className="skill-gaps">
+                        <p className="skill-gaps__label">
+                            Skills to Improve
+                        </p>
+
+                        {skillGaps.length > 0 ? (
+                            <div className="skill-gaps__list">
+                                {skillGaps.map((gap, index) => {
+                                    const severity = [
+                                        "low",
+                                        "medium",
+                                        "high",
+                                    ].includes(gap.severity)
+                                        ? gap.severity
+                                        : "medium";
+
+                                    return (
+                                        <span
+                                            key={`${gap.skill}-${index}`}
+                                            className={`skill-tag skill-tag--${severity}`}
+                                        >
+                                            {gap.skill}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <p className="empty-state__text">
+                                No skill-gap data is available in this report.
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="sidebar-divider" />
+
+                    <div className="report-summary">
+                        <p className="skill-gaps__label">
+                            Target Role
+                        </p>
+
+                        <p>
+                            {report.title || "Interview Preparation"}
+                        </p>
+                    </div>
                 </aside>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Interview
+export default Interview;

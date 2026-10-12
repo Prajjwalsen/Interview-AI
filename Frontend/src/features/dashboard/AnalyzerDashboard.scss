@@ -1,0 +1,365 @@
+/* ===== Main Dashboard ===== */
+.analyzer-dashboard {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 60px 5%;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2.6fr);
+  align-content: center;
+  align-items: center;
+  gap: 36px;
+  position: relative;
+  overflow-x: hidden;
+  background: #0d1016;
+  color: #f4f6fb;
+}
+
+.analyzer-dashboard * {
+  box-sizing: border-box;
+}
+
+/* ===== Heading Section ===== */
+.analyzer-header {
+  width: 100%;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.analyzer-eyebrow {
+  display: block;
+  margin-bottom: 22px;
+  color: #ff2d7a;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1.6;
+}
+
+.analyzer-header h1 {
+  margin: 0;
+  font-size: clamp(34px, 3.1vw, 48px);
+  font-weight: 850;
+  line-height: 1.16;
+  letter-spacing: -1.5px;
+}
+
+.analyzer-header h1 span {
+  display: block;
+  margin-top: 8px;
+  color: #ff2d7a;
+}
+
+.analyzer-header p {
+  max-width: 330px;
+  margin: 22px 0 0;
+  color: #91a0b5;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* ===== Three Cards in One Row ===== */
+.analyzer-grid {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 18px;
+}
+
+/* ===== Individual Card ===== */
+.analyzer-card {
+  min-width: 0;
+  min-height: 355px;
+  padding: 25px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid #293448;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #171c25 0%, #11151d 100%);
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.analyzer-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff2d7a;
+  box-shadow: 0 15px 35px rgba(255, 45, 122, 0.08);
+}
+
+/* ===== Card Icon ===== */
+.analyzer-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #343044;
+  border-radius: 17px;
+  background: #24202e;
+  font-size: 27px;
+}
+
+.analyzer-icon.linkedin {
+  background: rgba(10, 102, 194, 0.12);
+}
+
+.analyzer-icon.github {
+  background: #222631;
+}
+
+/* ===== Tag and Text ===== */
+.analyzer-tag {
+  margin-bottom: 10px;
+  color: #ff4b8b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.analyzer-card h2 {
+  margin: 0 0 13px;
+  color: #f4f6fb;
+  font-size: clamp(17px, 1.25vw, 20px);
+  font-weight: 750;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.analyzer-card p {
+  margin: 0 0 24px;
+  color: #91a0b5;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* ===== Button aligned at bottom ===== */
+.analyzer-card button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: auto;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: none;
+  border-radius: 11px;
+  background: #ff2d7a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.analyzer-card button:hover {
+  background: #ed1766;
+}
+
+.analyzer-card button span {
+  font-size: 19px;
+}
+
+/* ===== Footer ===== */
+.analyzer-footer {
+  display: none;
+}
+
+/* ===== Tablet ===== */
+@media (max-width: 1100px) {
+  .analyzer-dashboard {
+    padding: 48px 4%;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .analyzer-header {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: center;
+  }
+
+  .analyzer-header h1 span {
+    display: inline;
+    margin-left: 8px;
+  }
+
+  .analyzer-header p {
+    margin: 18px auto 0;
+  }
+
+  .analyzer-grid {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .analyzer-card {
+    padding: 22px 18px;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 700px) {
+  .analyzer-dashboard {
+    padding: 36px 20px;
+    align-content: start;
+    gap: 28px;
+  }
+
+  .analyzer-header {
+    text-align: left;
+  }
+
+  .analyzer-header h1 {
+    font-size: 38px;
+  }
+
+  .analyzer-header h1 span {
+    display: block;
+    margin-left: 0;
+  }
+
+  .analyzer-header p {
+    font-size: 14px;
+    margin-left: 0;
+  }
+
+  .analyzer-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .analyzer-card {
+    min-height: 310px;
+    padding: 24px;
+  }
+}
+
+/* ===== Accessibility ===== */
+@media (prefers-reduced-motion: reduce) {
+  .analyzer-card,
+  .analyzer-card button {
+    transition: none;
+  }
+
+  .analyzer-card:hover {
+    transform: none;
+  }
+}
+
+/* ===== Centered Analyzer Dashboard Layout ===== */
+.analyzer-dashboard {
+  min-height: 100vh;
+  width: 100%;
+  padding: 65px 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 42px;
+}
+
+/* Heading at top center */
+.analyzer-header {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.analyzer-eyebrow {
+  margin-bottom: 18px;
+}
+
+.analyzer-header h1 {
+  margin: 0;
+  font-size: clamp(38px, 4vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+}
+
+.analyzer-header h1 span {
+  display: inline;
+  margin-left: 10px;
+}
+
+.analyzer-header p {
+  max-width: 600px;
+  margin: 18px auto 0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* Cards centered underneath the heading */
+.analyzer-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.analyzer-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 350px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .analyzer-dashboard {
+    padding: 50px 5%;
+    gap: 32px;
+  }
+
+  .analyzer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analyzer-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .analyzer-dashboard {
+    padding: 40px 20px;
+    gap: 28px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 36px;
+  }
+
+  .analyzer-header h1 span {
+    display: block;
+    margin: 8px 0 0;
+  }
+
+  .analyzer-header p {
+    font-size: 14px;
+  }
+
+  .analyzer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analyzer-card:last-child {
+    grid-column: auto;
+  }
+}

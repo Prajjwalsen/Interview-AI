@@ -1,3 +1,4 @@
+@use "sass:color";
 // ── Shared Variables (mirrors home.scss theme) ────────────────────────────────
 $bg-page: #0d1117;
 $bg-card: #161b22;
@@ -172,7 +173,7 @@ $severity-low: #3fb950;
     transition: border-color 0.2s;
 
     &:hover {
-        border-color: lighten($border-color, 8%);
+        border-color: color.adjust($border-color, $lightness: 8%);
     }
 
     &__header {
@@ -234,7 +235,7 @@ $severity-low: #3fb950;
         p {
             margin: 0;
             font-size: 0.835rem;
-            color: lighten($text-muted, 15%);
+            color: color.adjust($text-muted, $lightness: 15%);
             line-height: 1.6;
         }
     }
@@ -338,7 +339,7 @@ $severity-low: #3fb950;
             align-items: flex-start;
             gap: 0.5rem;
             font-size: 0.845rem;
-            color: lighten($text-muted, 12%);
+            color: color.adjust($text-muted, $lightness: 12%);
             line-height: 1.5;
         }
     }
@@ -476,4 +477,197 @@ $severity-low: #3fb950;
         background-color: rgba($severity-low, 0.1);
         border-color: rgba($severity-low, 0.25);
     }
+}
+
+
+/* =========================================
+   INTERVIEW PAGE - READABILITY & UI FIX
+   ========================================= */
+
+/* Main interview page text */
+.interview-page,
+.interview-container,
+.interview-content {
+  color: #e2e8f0;
+}
+
+/* Question cards and accordion containers */
+.question-item,
+.question-card,
+.accordion-item,
+.question-accordion {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 12px !important;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Question headers */
+.question-header,
+.question-title,
+.question-item button,
+.question-card button,
+.accordion-item button,
+.question-accordion button {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Question text */
+.question-text,
+.question-header span,
+.question-title span,
+.question-item p,
+.question-card p {
+  color: #f1f5f9 !important;
+}
+
+/* Question number badge */
+.question-number,
+.question-badge {
+  background: rgba(236, 72, 153, 0.14) !important;
+  color: #f472b6 !important;
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-weight: 600;
+}
+
+/* Answer area */
+.answer-content,
+.question-answer,
+.answer,
+.explanation,
+.intention {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+  line-height: 1.8;
+  padding: 16px;
+}
+
+/* Labels inside expanded answers */
+.answer-content strong,
+.question-answer strong,
+.answer strong,
+.explanation strong,
+.intention strong {
+  color: #f8fafc !important;
+}
+
+/* Hover effect */
+.question-item:hover,
+.question-card:hover,
+.accordion-item:hover,
+.question-accordion:hover {
+  border-color: #ec4899 !important;
+  transition: border-color 0.2s ease;
+}
+
+/* Plus/minus icons */
+.question-item svg,
+.question-card svg,
+.accordion-item svg,
+.question-accordion svg {
+  color: #cbd5e1;
+}
+
+/* HR, behavioral and roadmap headings */
+.interview-page h1,
+.interview-page h2,
+.interview-page h3,
+.interview-container h1,
+.interview-container h2,
+.interview-container h3 {
+  color: #f8fafc;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .question-item,
+  .question-card,
+  .accordion-item,
+  .question-accordion {
+    margin-bottom: 10px;
+    border-radius: 10px !important;
+  }
+
+  .question-header,
+  .question-title,
+  .question-item button,
+  .question-card button,
+  .accordion-item button {
+    font-size: 14px;
+  }
+}
+
+/* FIX: Question cards showing white background */
+.interview-page {
+  .q-card {
+    background-color: #1c2230 !important;
+    border: 1px solid #2a3348 !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  .q-card__header {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    background: #1c2230 !important;
+    color: #e6edf3 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: left;
+  }
+
+  /* In case the question header contains a button */
+  .q-card__header button,
+  button.q-card__header {
+    width: 100%;
+    box-sizing: border-box;
+    background: #1c2230 !important;
+    color: #e6edf3 !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .q-card__question {
+    color: #e6edf3 !important;
+    opacity: 1 !important;
+  }
+
+  .q-card__index {
+    color: #ff2d78 !important;
+    background-color: rgba(255, 45, 120, 0.12) !important;
+  }
+
+  .q-card__chevron {
+    color: #aab6c5 !important;
+  }
+
+  .q-card__body {
+    background-color: #161b22 !important;
+    color: #cbd5e1 !important;
+  }
+
+  .q-card__section p {
+    color: #cbd5e1 !important;
+    opacity: 1 !important;
+  }
+
+  .q-card__header:hover,
+  .q-card__header button:hover {
+    background-color: #252e40 !important;
+  }
 }
