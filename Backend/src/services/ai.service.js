@@ -4,19 +4,26 @@ const { z } = require("zod");
 const { zodToJsonSchema } = require("zod-to-json-schema");
 const puppeteer = require("puppeteer");
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GOOGLE_GENAI_API_KEY,
-});
+const ai = process.env.GOOGLE_GENAI_API_KEY
+    ? new GoogleGenAI({
+        apiKey: process.env.GOOGLE_GENAI_API_KEY
+    })
+    : null;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
+
 async function generateWithRetry(request, attempts = 2) {
+    if (!ai) {
+        throw new Error("Gemini API key is not configured.");
+    }
+
+    // Try known model IDs. Avoid repeating the requested model.
     const modelsToTry = [
-        request.model || "gemini-3.1-flash",
-        "gemini-3.1-flash-lite",
-        "gemini-2.5-flash",
-    ];
+        request.model,
+        "gemini-2.5-flash"
+    ].filter(Boolean);
 
     const uniqueModels = [...new Set(modelsToTry)];
     let lastError;
@@ -33,25 +40,42 @@ async function generateWithRetry(request, attempts = 2) {
                     model,
                 });
 
+                if (!response.text) {
+                    throw new Error(`${model} returned an empty response.`);
+                }
+
                 console.log(`Gemini succeeded with model: ${model}`);
                 return response;
+
             } catch (error) {
                 lastError = error;
 
                 const status = Number(error.status || error.code);
-                const retryable = [429, 500, 502, 503, 504].includes(status);
+                const message = String(error.message || "");
+
+                // Invalid model, unsupported model or invalid request:
+                // skip retries for this model and try the next one.
+                const permanentError =
+                    status === 400 ||
+                    status === 401 ||
+                    status === 403 ||
+                    status === 404 ||
+                    /NOT_FOUND|not found|not supported/i.test(message);
+
+                const retryable =
+                    [408, 429, 500, 502, 503, 504].includes(status) ||
+                    /timeout|ECONNRESET|fetch failed/i.test(message);
 
                 console.error(
-                    `Model ${model} failed with status ${status}:`,
-                    error.message
+                    `Model ${model} failed (status ${status || "unknown"}): ${message}`
                 );
 
-                if (!retryable) {
-                    throw error;
+                if (permanentError || !retryable) {
+                    break;
                 }
 
                 if (attempt < attempts) {
-                    await sleep(attempt * 3000);
+                    await sleep(attempt * 1000);
                 }
             }
         }
@@ -61,6 +85,45 @@ async function generateWithRetry(request, attempts = 2) {
 
     throw lastError || new Error("All Gemini models failed.");
 }
+
+
+
+async function generateWithOllama(prompt) {
+    const response = await fetch(
+        "http://localhost:11434/api/generate",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                model: "llama3.2:1b",
+                prompt,
+                stream: false,
+                format: "json",
+                options: {
+                    temperature: 0.2,
+                },
+            }),
+            signal: AbortSignal.timeout(120000),
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `Ollama request failed: ${response.status} ${response.statusText}`
+        );
+    }
+
+    const data = await response.json();
+
+    if (!data.response) {
+        throw new Error("Ollama returned an empty response.");
+    }
+
+    return data.response;
+}
+
 
 // Interview report validation schema
 const interviewReportSchema = z.object({
@@ -252,10 +315,6 @@ async function generateInterviewReport({
     selfDescription,
     jobDescription,
 }) {
-    if (!process.env.GOOGLE_GENAI_API_KEY) {
-        throw new Error("GOOGLE_GENAI_API_KEY is missing in backend environment.");
-    }
-
     if (!jobDescription || !jobDescription.trim()) {
         throw new Error("Job description is required.");
     }
@@ -360,27 +419,56 @@ Return JSON only.
 `;
 
     try {
-        const response = await generateWithRetry({
-            model: "gemini-3.8-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-            },
-        });
+        let responseText;
+        let providerUsed = "Gemini";
 
-        if (!response.text) {
-            throw new Error("Gemini returned an empty response.");
+        // First attempt: Gemini
+        try {
+            const response = await generateWithRetry({
+                model: "gemini-3.8-flash",
+                contents: prompt,
+                config: {
+                    responseMimeType: "application/json",
+                },
+            });
+
+            if (!response.text) {
+                throw new Error("Gemini returned an empty response.");
+            }
+
+            responseText = response.text;
+
+            console.log("Interview report generated using Gemini.");
+        } catch (geminiError) {
+            // Fallback: local Ollama
+            console.warn(
+                "Gemini unavailable. Trying Ollama fallback:",
+                geminiError.message
+            );
+
+            responseText = await generateWithOllama(prompt);
+            providerUsed = "Ollama";
+
+            console.log("Interview report generated using Ollama.");
         }
 
-        console.log("RAW GEMINI RESPONSE:", response.text);
+        console.log(
+            `RAW ${providerUsed.toUpperCase()} RESPONSE:`,
+            responseText
+        );
 
+        // Parse the JSON response from whichever provider succeeded.
         let parsedReport;
 
         try {
-            parsedReport = JSON.parse(response.text);
+            parsedReport = JSON.parse(responseText);
         } catch (error) {
-            console.error("Invalid Gemini JSON:", error.message);
-            throw new Error("Gemini returned invalid JSON.");
+            console.error(
+                `Invalid ${providerUsed} JSON:`,
+                error.message
+            );
+
+            throw new Error(`${providerUsed} returned invalid JSON.`);
         }
 
         const technicalQuestions = normalizeQuestions(
@@ -436,13 +524,14 @@ Return JSON only.
             skillGaps,
             preparationPlan,
         };
+
         console.log("HR DEBUG:", {
             rawHrQuestions: parsedReport.hrQuestions,
             rawBehavioralQuestions: parsedReport.behavioralQuestions,
             normalizedBehavioralCount: behavioralQuestions.length,
         });
 
-        // Reject incomplete responses rather than saving a broken report.
+        // Reject incomplete responses instead of saving a broken report.
         if (
             normalizedReport.technicalQuestions.length < 1 ||
             normalizedReport.behavioralQuestions.length < 1 ||
@@ -450,35 +539,50 @@ Return JSON only.
             normalizedReport.preparationPlan.length < 1
         ) {
             console.error("Normalized report is incomplete:", {
-                technicalQuestions: normalizedReport.technicalQuestions.length,
-                behavioralQuestions: normalizedReport.behavioralQuestions.length,
+                technicalQuestions:
+                    normalizedReport.technicalQuestions.length,
+                behavioralQuestions:
+                    normalizedReport.behavioralQuestions.length,
                 skillGaps: normalizedReport.skillGaps.length,
                 preparationPlan: normalizedReport.preparationPlan.length,
             });
 
             throw new Error(
-                "Gemini returned an incomplete report. Please try again."
+                `${providerUsed} returned an incomplete report. Please try again.`
             );
         }
 
-        const validatedReport = interviewReportSchema.parse(normalizedReport);
+        // Validate the final report.
+        const validatedReport =
+            interviewReportSchema.parse(normalizedReport);
 
-        // Check expected counts so the UI receives a complete report.
+        // Warn if the provider returned unexpected item counts.
         if (
             validatedReport.technicalQuestions.length !== 20 ||
             validatedReport.behavioralQuestions.length !== 12 ||
             validatedReport.preparationPlan.length !== 30
         ) {
-            console.warn("Report generated with unexpected item counts:", {
-                technical: validatedReport.technicalQuestions.length,
-                behavioral: validatedReport.behavioralQuestions.length,
-                roadmapDays: validatedReport.preparationPlan.length,
-            });
+            console.warn(
+                "Report generated with unexpected item counts:",
+                {
+                    provider: providerUsed,
+                    technical:
+                        validatedReport.technicalQuestions.length,
+                    behavioral:
+                        validatedReport.behavioralQuestions.length,
+                    roadmapDays:
+                        validatedReport.preparationPlan.length,
+                }
+            );
         }
 
         return validatedReport;
     } catch (error) {
-        console.error("AI interview report generation failed:", error);
+        console.error(
+            "AI interview report generation failed:",
+            error
+        );
+
         throw error;
     }
 }
@@ -517,7 +621,7 @@ async function generateResumePdf({
     }
 
     const resumePdfSchema = z.object({
-        html: z.string(),
+        html: z.string().min(1),
     });
 
     const prompt = `
@@ -537,26 +641,80 @@ Use a simple professional design suitable for printing on A4 paper.
 Do not invent qualifications, employers, dates, or achievements.
 `;
 
-    const response = await generateWithRetry({
-        model: "gemini-3.1-flash",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: zodToJsonSchema(resumePdfSchema),
-        },
-    });
+    let responseText;
+    let providerUsed = "Gemini";
 
-    if (!response.text) {
-        throw new Error("Gemini returned an empty resume response.");
+    try {
+        const response = await generateWithRetry({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: zodToJsonSchema(resumePdfSchema),
+            },
+        });
+
+        responseText = response.text;
+    } catch (geminiError) {
+        console.warn(
+            "Gemini resume generation failed. Trying Ollama:",
+            geminiError.message
+        );
+
+        responseText = await generateWithOllama(prompt);
+        providerUsed = "Ollama";
     }
 
-    const jsonContent = JSON.parse(response.text);
+    let jsonContent;
+
+    try {
+        jsonContent = JSON.parse(responseText);
+    } catch {
+        throw new Error(`${providerUsed} returned invalid JSON for the resume.`);
+    }
+
     const validated = resumePdfSchema.parse(jsonContent);
 
     return generatePdfFromHtml(validated.html);
+}
+async function generateAgentResponse(prompt) {
+    let responseText;
+
+    // First try Gemini
+    try {
+        const response = await generateWithRetry({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+            },
+        });
+
+        if (!response.text) {
+            throw new Error("Gemini returned an empty response.");
+        }
+
+        responseText = response.text;
+        console.log("Agent response generated using Gemini.");
+    } catch (error) {
+        console.warn(
+            "Gemini unavailable for agent. Trying Ollama:",
+            error.message
+        );
+
+        responseText = await generateWithOllama(prompt);
+        console.log("Agent response generated using Ollama.");
+    }
+
+    try {
+        return JSON.parse(responseText);
+    } catch {
+        throw new Error("AI agent returned invalid JSON.");
+    }
 }
 
 module.exports = {
     generateInterviewReport,
     generateResumePdf,
+    generateAgentResponse,
 };

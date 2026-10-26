@@ -8,6 +8,9 @@ import Interview from "./features/interview/pages/Interview";
 
 import AnalyzerDashboard from "./features/dashboard/AnalyzerDashboard";
 import AnalyzerPlaceholder from "./features/dashboard/AnalyzerPlaceholder";
+import GitHubAnalyzer from "./features/dashboard/GitHubAnalyzer";
+import GitHubAnalyzerLoading from "./features/dashboard/GitHubAnalyzerLoading";
+import GitHubReport from "./features/dashboard/GitHubReport";
 
 export const router = createBrowserRouter([
     {
@@ -38,7 +41,7 @@ export const router = createBrowserRouter([
         path: "/linkedin-analyzer",
         element: (
             <Protected>
-                <AnalyzerPlaceholder type="LinkedIn" />
+                <AnalyzerPlaceholder platform="LinkedIn" />
             </Protected>
         )
     },
@@ -46,7 +49,7 @@ export const router = createBrowserRouter([
         path: "/github-analyzer",
         element: (
             <Protected>
-                <AnalyzerPlaceholder type="GitHub" />
+                <GitHubAnalyzer />
             </Protected>
         )
     },
@@ -57,5 +60,21 @@ export const router = createBrowserRouter([
                 <Interview />
             </Protected>
         )
-    }
+    },
+    {
+        path: "/github-analyzer/loading",
+        element: (
+            <Protected>
+                <GitHubAnalyzerLoading />
+            </Protected>
+        )
+    },
+    {
+        path: "/github-analyzer/report",
+        element: (
+            <Protected>
+                <GitHubReport />
+            </Protected>
+        )
+    },
 ]);

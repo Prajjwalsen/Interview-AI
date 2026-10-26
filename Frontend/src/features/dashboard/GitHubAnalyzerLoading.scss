@@ -1,0 +1,297 @@
+
+.github-loading {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #141317;
+    color: #f5f3f7;
+    font-family: inherit;
+    text-align: center;
+    position: relative;
+    isolation: isolate;
+}
+
+.github-loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255, 45, 120, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 45, 120, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 75%);
+}
+
+.github-loading__content {
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.github-loading__robot {
+    width: 100px;
+    height: 112px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: gs-bob 2.4s ease-in-out infinite;
+}
+
+.github-loading__antenna {
+    width: 3px;
+    height: 15px;
+    background: #a99db8;
+    position: relative;
+}
+
+.github-loading__antenna::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: -3.5px;
+    top: -5px;
+    border-radius: 50%;
+    background: #ff2d78;
+    box-shadow: 0 0 14px rgba(255, 45, 120, 0.8);
+    animation: gs-signal 1.5s ease-in-out infinite;
+}
+
+.github-loading__head {
+    width: 76px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 17px;
+    position: relative;
+    border: 2px solid #bcb1ca;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #e7dfef, #aaa0bb);
+    box-shadow: 0 0 26px rgba(255, 45, 120, 0.12);
+}
+
+.github-loading__head::before,
+.github-loading__head::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 18px;
+    top: 17px;
+    border-radius: 5px;
+    background: #92869f;
+}
+
+.github-loading__head::before {
+    left: -8px;
+}
+
+.github-loading__head::after {
+    right: -8px;
+}
+
+.github-loading__head span {
+    width: 9px;
+    height: 12px;
+    border-radius: 50%;
+    background: #292430;
+    animation: gs-blink 4s infinite;
+}
+
+.github-loading__head i {
+    position: absolute;
+    bottom: 8px;
+    left: 31px;
+    width: 13px;
+    height: 5px;
+    border-bottom: 2px solid #ff2d78;
+    border-radius: 50%;
+}
+
+.github-loading__body {
+    width: 48px;
+    height: 33px;
+    margin-top: 5px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #a99db8;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #cfc4db, #92869f);
+}
+
+.github-loading__body b {
+    width: 25px;
+    height: 21px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #ff2d78;
+    border-radius: 5px;
+    color: #ff2d78;
+    font-size: 10px;
+}
+
+.github-loading__brand {
+    margin: 15px 0 26px;
+    font-size: 23px;
+    font-weight: 850;
+    letter-spacing: -0.5px;
+}
+
+.github-loading__brand span {
+    color: #ff2d78;
+}
+
+.github-loading__eyebrow {
+    margin-bottom: 14px;
+    color: #ff2d78;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.github-loading__content h1 {
+    margin: 0;
+    font-size: clamp(23px, 4vw, 30px);
+    line-height: 1.4;
+    font-weight: 750;
+}
+
+.github-loading__description {
+    max-width: 370px;
+    margin: 12px 0 25px;
+    color: #b8b2c0;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.github-loading__progress {
+    width: min(100%, 320px);
+    height: 4px;
+    margin-bottom: 27px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #34303a;
+}
+
+.github-loading__progress span {
+    display: block;
+    width: 35%;
+    height: 100%;
+    border-radius: inherit;
+    background: #ff2d78;
+    box-shadow: 0 0 12px rgba(255, 45, 120, 0.6);
+    animation: gs-progress 1.6s ease-in-out infinite;
+}
+
+.github-loading__steps {
+    width: min(100%, 320px);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+}
+
+.github-loading__steps p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #d2cbd9;
+    font-size: 12px;
+}
+
+.github-loading__steps p span {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #ff2d78;
+    box-shadow: 0 0 9px rgba(255, 45, 120, 0.4);
+    animation: gs-step-pulse 1.5s ease-in-out infinite;
+}
+
+.github-loading__steps p:nth-child(2) span {
+    animation-delay: 0.3s;
+}
+
+.github-loading__steps p:nth-child(3) span {
+    animation-delay: 0.6s;
+}
+
+.github-loading__note {
+    margin: 26px 0 0;
+    color: #88818f;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.github-loading__error {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.github-loading__error p {
+    color: #c2bac9;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.github-loading__error button {
+    margin-top: 12px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 6px;
+    background: #ff2d78;
+    color: white;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+@keyframes gs-bob {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-9px) rotate(2deg); }
+}
+
+@keyframes gs-signal {
+    0%, 100% { opacity: 0.65; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes gs-blink {
+    0%, 44%, 48%, 100% { transform: scaleY(1); }
+    46% { transform: scaleY(0.12); }
+}
+
+@keyframes gs-progress {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(310%); }
+}
+
+@keyframes gs-step-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .github-loading__robot,
+    .github-loading__antenna::before,
+    .github-loading__head span,
+    .github-loading__progress span,
+    .github-loading__steps p span {
+        animation: none;
+    }
+}

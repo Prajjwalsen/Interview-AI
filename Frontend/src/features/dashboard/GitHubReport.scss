@@ -1,0 +1,729 @@
+
+.gh-report {
+    --report-bg: #141216;
+    --report-surface: #1b181f;
+    --report-surface-hover: #211c25;
+    --report-pink: #ff4f91;
+    --report-pink-soft: #ff8db6;
+    --report-border: #39313d;
+    --report-text: #f5f0f6;
+    --report-muted: #a69daa;
+    --report-green: #8ce8ad;
+
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 0 clamp(18px, 4vw, 64px) 48px;
+    overflow-x: clip;
+    background: var(--report-bg);
+    color: var(--report-text);
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.gh-report *,
+.gh-report *::before,
+.gh-report *::after {
+    box-sizing: border-box;
+}
+
+/* Top navigation */
+
+.gh-report__topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    min-height: 68px;
+    border-bottom: 1px solid var(--report-border);
+}
+
+.gh-report button {
+    width: fit-content;
+    padding: 10px 14px;
+    border: 1px solid var(--report-border);
+    border-radius: 5px;
+    background: var(--report-surface);
+    color: var(--report-text);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease;
+}
+
+.gh-report button:hover {
+    border-color: var(--report-pink);
+    background: var(--report-surface-hover);
+}
+
+.gh-report__brand {
+    font-size: 18px;
+    font-weight: 850;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.gh-report__brand span {
+    color: var(--report-pink);
+}
+
+.gh-report__status,
+.gh-report__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--report-pink-soft);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.gh-report__status {
+    justify-self: end;
+}
+
+.gh-report__status i,
+.gh-report__verified i {
+    flex: 0 0 7px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--report-pink);
+    box-shadow: 0 0 10px #ff4f9140;
+}
+
+/* Profile header */
+
+.gh-report__profile {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 22px;
+    margin-top: 28px;
+    padding: 30px;
+    border: 1px solid var(--report-border);
+    border-radius: 8px;
+    background:
+        radial-gradient(ellipse at 0% 0%, #ff4f910b, transparent 55%),
+        var(--report-surface);
+}
+
+.gh-report__avatar {
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    border: 1px solid var(--report-pink);
+    border-radius: 12px;
+    background: #2a1b27;
+    color: var(--report-pink);
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.gh-report__identity {
+    min-width: 0;
+}
+
+.gh-report__eyebrow,
+.gh-report__account-date {
+    color: var(--report-muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    line-height: 1.7;
+}
+
+.gh-report__identity h1 {
+    margin: 8px 0;
+    font-size: clamp(26px, 3vw, 40px);
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+    overflow-wrap: anywhere;
+}
+
+.gh-report a {
+    color: var(--report-pink-soft);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.gh-report a:hover {
+    color: var(--report-pink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.gh-report__identity p {
+    max-width: 760px;
+    margin: 12px 0;
+    color: #c9c1ce;
+    font-size: 13px;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+}
+
+.gh-report__account-date {
+    display: block;
+    margin-top: 14px;
+}
+
+.gh-report__verified {
+    align-self: start;
+    justify-self: end;
+    white-space: nowrap;
+}
+
+/* Statistics */
+
+.gh-report__metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.gh-report__metric {
+    min-width: 0;
+    min-height: 116px;
+    padding: 22px;
+    border: 1px solid var(--report-border);
+    border-radius: 7px;
+    background: var(--report-surface);
+    transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.gh-report__metric:hover {
+    border-color: #ff4f9180;
+    transform: translateY(-2px);
+}
+
+.gh-report__metric span {
+    display: block;
+    color: var(--report-pink-soft);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.6;
+}
+
+.gh-report__metric strong {
+    display: block;
+    margin-top: 15px;
+    font-size: clamp(24px, 2.2vw, 32px);
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+/* Shared section layout */
+
+.gh-report__section {
+    min-width: 0;
+    margin-top: 38px;
+}
+
+.gh-report__section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    margin-bottom: 18px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--report-border);
+}
+
+.gh-report__section-title span {
+    flex: 0 0 auto;
+    color: var(--report-pink);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+}
+
+.gh-report__section-title h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* Languages */
+
+.gh-report__languages {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.gh-report__language {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
+    min-height: 68px;
+    padding: 16px;
+    border: 1px solid var(--report-border);
+    border-radius: 6px;
+    background: var(--report-surface);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.gh-report__language-dot {
+    flex: 0 0 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--report-pink);
+}
+
+.gh-report__language strong {
+    margin-left: auto;
+    color: var(--report-muted);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.gh-report__footnote,
+.gh-report__muted {
+    color: var(--report-muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.gh-report__footnote {
+    margin-top: 12px;
+}
+
+/* AI analysis */
+
+.gh-report__summary,
+.gh-report__panel,
+.gh-report__repo,
+.gh-report__action {
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid var(--report-border);
+    border-radius: 7px;
+    background: var(--report-surface);
+}
+
+.gh-report__summary > p {
+    margin: 14px 0 0;
+    color: #ded6e2;
+    font-size: 13px;
+    line-height: 1.95;
+    overflow-wrap: anywhere;
+}
+
+.gh-report__analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.gh-report__panel h3,
+.gh-report__action h3 {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.gh-report__panel ul {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding-left: 19px;
+    color: #d3cbd8;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+.gh-report__panel li {
+    padding-left: 3px;
+    overflow-wrap: anywhere;
+}
+
+.gh-report__panel li::marker {
+    color: var(--report-pink);
+}
+
+.gh-report__panel.attention {
+    border-top-color: #ff4f9180;
+}
+
+.gh-report__panel.attention li::marker {
+    color: var(--report-pink-soft);
+}
+
+/* Repository highlights */
+
+.gh-report__repositories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 14px;
+}
+
+.gh-report__repo {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: border-color 160ms ease, background 160ms ease;
+}
+
+.gh-report__repo:hover {
+    border-color: #ff4f9170;
+    background: var(--report-surface-hover);
+}
+
+.gh-report__repo-number,
+.gh-report__action-number {
+    flex: 0 0 auto;
+    color: var(--report-pink);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+}
+
+.gh-report__repo-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.gh-report__repo-info > a {
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.7;
+}
+
+.gh-report__repo-info p,
+.gh-report__action p {
+    margin: 10px 0;
+    color: var(--report-muted);
+    font-size: 12px;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.gh-report__repo-info > span {
+    display: block;
+    margin-top: 12px;
+    color: var(--report-pink-soft);
+    font-size: 10px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+/* Public repository table */
+
+.gh-report__table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--report-border);
+    border-radius: 7px;
+    background: var(--report-surface);
+    scrollbar-width: thin;
+    scrollbar-color: var(--report-border) transparent;
+}
+
+.gh-report__table {
+    width: 100%;
+    min-width: 660px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+}
+
+.gh-report__table th,
+.gh-report__table td {
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--report-border);
+    line-height: 1.6;
+}
+
+.gh-report__table th {
+    background: #211c25;
+    color: var(--report-pink-soft);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.gh-report__table td {
+    color: #ded6e2;
+}
+
+.gh-report__table td:first-child {
+    min-width: 220px;
+}
+
+.gh-report__table tbody tr {
+    transition: background 140ms ease;
+}
+
+.gh-report__table tbody tr:hover {
+    background: #ff4f9109;
+}
+
+.gh-report__table tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Recommended actions */
+
+.gh-report__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 14px;
+}
+
+.gh-report__action {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.gh-report__action > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.gh-report__priority {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--report-pink-soft);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.gh-report__priority--high {
+    color: var(--report-pink);
+}
+
+.gh-report__priority--medium {
+    color: #f0c477;
+}
+
+.gh-report__priority--low {
+    color: #a9a1b0;
+}
+
+.gh-report__action p {
+    margin-bottom: 0;
+}
+
+/* Footer */
+
+.gh-report__footer {
+    margin-top: 46px;
+    padding-top: 20px;
+    border-top: 1px solid var(--report-border);
+    color: var(--report-muted);
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+    .gh-report__metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gh-report__languages {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .gh-report__profile {
+        padding: 24px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+    .gh-report {
+        padding: 0 16px 32px;
+    }
+
+    .gh-report__topbar {
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        min-height: 62px;
+    }
+
+    .gh-report__brand {
+        display: none;
+    }
+
+    .gh-report__status {
+        font-size: 9px;
+    }
+
+    .gh-report__profile {
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 15px;
+        margin-top: 18px;
+        padding: 19px;
+    }
+
+    .gh-report__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        font-size: 22px;
+    }
+
+    .gh-report__identity h1 {
+        font-size: 25px;
+    }
+
+    .gh-report__identity p {
+        font-size: 12px;
+    }
+
+    .gh-report__verified {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .gh-report__metrics {
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .gh-report__metric {
+        min-height: 95px;
+        padding: 15px;
+    }
+
+    .gh-report__metric strong {
+        margin-top: 10px;
+        font-size: 25px;
+    }
+
+    .gh-report__section {
+        margin-top: 30px;
+    }
+
+    .gh-report__section-title h2 {
+        font-size: 13px;
+    }
+
+    .gh-report__languages {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .gh-report__language {
+        padding: 12px;
+        font-size: 11px;
+    }
+
+    .gh-report__analysis-grid,
+    .gh-report__repositories,
+    .gh-report__actions {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .gh-report__summary,
+    .gh-report__panel,
+    .gh-report__repo,
+    .gh-report__action {
+        padding: 17px;
+    }
+
+    .gh-report__table th,
+    .gh-report__table td {
+        padding: 12px;
+    }
+
+    .gh-report__footer {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 380px) {
+    .gh-report__metrics,
+    .gh-report__languages {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gh-report__profile {
+        padding: 15px;
+    }
+
+    .gh-report__identity h1 {
+        font-size: 22px;
+    }
+}
+
+/* GitHub report layout isolation */
+html,
+body,
+#root {
+    min-width: 0;
+    min-height: 100%;
+}
+
+#root {
+    width: 100%;
+}
+
+.gh-report {
+    display: block !important;
+    position: relative;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    flex: 1 1 auto;
+    align-self: stretch;
+}
+
+.gh-report > header,
+.gh-report > section,
+.gh-report > footer {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
+
+.gh-report__metrics,
+.gh-report__languages,
+.gh-report__analysis-grid,
+.gh-report__repositories,
+.gh-report__actions {
+    width: 100%;
+    min-width: 0;
+}
+
+.gh-report__profile > *,
+.gh-report__metric,
+.gh-report__language,
+.gh-report__summary,
+.gh-report__panel,
+.gh-report__repo,
+.gh-report__action {
+    min-width: 0;
+}
+
