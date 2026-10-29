@@ -11,6 +11,8 @@ import AnalyzerPlaceholder from "./features/dashboard/AnalyzerPlaceholder";
 import GitHubAnalyzer from "./features/dashboard/GitHubAnalyzer";
 import GitHubAnalyzerLoading from "./features/dashboard/GitHubAnalyzerLoading";
 import GitHubReport from "./features/dashboard/GitHubReport";
+import LinkedInatorLoading from "./features/dashboard/LinkedInatorLoading";
+import LinkedInatorReport from "./features/dashboard/LinkedInatorReport";
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +44,22 @@ export const router = createBrowserRouter([
         element: (
             <Protected>
                 <AnalyzerPlaceholder platform="LinkedIn" />
+            </Protected>
+        )
+    },
+    {
+        path: "/linkedin-analyzer/loading",
+        element: (
+            <Protected>
+                <LinkedInatorLoading />
+            </Protected>
+        )
+    },
+    {
+        path: "/linkedin-analyzer/report",
+        element: (
+            <Protected>
+                <LinkedInatorReport />
             </Protected>
         )
     },

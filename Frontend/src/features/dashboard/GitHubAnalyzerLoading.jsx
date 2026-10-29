@@ -45,19 +45,11 @@ export default function GitHubAnalyzerLoading() {
     return (
         <main className="github-loading">
             <div className="github-loading__content">
-                <div className="github-loading__robot" aria-label="GitSherlock is analyzing">
-                    <span className="github-loading__antenna" />
-
-                    <div className="github-loading__head">
-                        <span />
-                        <span />
-                        <i />
-                    </div>
-
-                    <div className="github-loading__body">
-                        <b>GS</b>
-                    </div>
-                </div>
+                <img
+                    src="/github-logo.gif"
+                    alt="GitHub logo"
+                    className="github-loading__logo"
+                />
 
                 <p className="github-loading__brand">
                     Git<span>Sherlock</span>

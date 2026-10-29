@@ -1,365 +1,505 @@
-/* ===== Main Dashboard ===== */
+
+/* =========================================
+   INTERVIEW AI MASTER — ANALYZER DASHBOARD
+   ========================================= */
+
 .analyzer-dashboard {
-  min-height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 60px 5%;
-  display: grid;
-  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2.6fr);
-  align-content: center;
-  align-items: center;
-  gap: 36px;
-  position: relative;
-  overflow-x: hidden;
-  background: #0d1016;
-  color: #f4f6fb;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 55px 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 38px;
+    position: relative;
+    overflow-x: hidden;
+    background: #0d1016;
+    color: #f4f6fb;
 }
 
 .analyzer-dashboard * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-/* ===== Heading Section ===== */
+/* =========================================
+   HEADER
+   ========================================= */
+
 .analyzer-header {
-  width: 100%;
-  min-width: 0;
-  grid-column: 1;
-  grid-row: 1;
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .analyzer-eyebrow {
-  display: block;
-  margin-bottom: 22px;
-  color: #ff2d7a;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  line-height: 1.6;
+    display: block;
+    margin-bottom: 18px;
+    color: #ff2d7a;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1.6;
 }
 
 .analyzer-header h1 {
-  margin: 0;
-  font-size: clamp(34px, 3.1vw, 48px);
-  font-weight: 850;
-  line-height: 1.16;
-  letter-spacing: -1.5px;
+    margin: 0;
+    font-size: clamp(38px, 4vw, 56px);
+    font-weight: 850;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    color: #f4f6fb;
 }
 
 .analyzer-header h1 span {
-  display: block;
-  margin-top: 8px;
-  color: #ff2d7a;
+    display: inline;
+    margin-left: 10px;
+    color: #ff2d7a;
 }
 
 .analyzer-header p {
-  max-width: 330px;
-  margin: 22px 0 0;
-  color: #91a0b5;
-  font-size: 15px;
-  line-height: 1.8;
+    max-width: 600px;
+    margin: 18px auto 0;
+    color: #91a0b5;
+    font-size: 16px;
+    line-height: 1.8;
 }
 
-/* ===== Three Cards in One Row ===== */
+/* =========================================
+   ANALYZER GRID
+   ========================================= */
+
 .analyzer-grid {
-  grid-column: 2;
-  grid-row: 1;
-  width: 100%;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 18px;
+    width: 100%;
+    max-width: 1290px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 22px;
 }
 
-/* ===== Individual Card ===== */
+/* =========================================
+   CARDS
+   ========================================= */
+
 .analyzer-card {
-  min-width: 0;
-  min-height: 355px;
-  padding: 25px 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border: 1px solid #293448;
-  border-radius: 20px;
-  background: linear-gradient(145deg, #171c25 0%, #11151d 100%);
-  transition: transform 0.25s ease, border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 355px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 0;
+
+    border: 1px solid #293448;
+    border-radius: 20px;
+
+    background: #111426;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .analyzer-card:hover {
-  transform: translateY(-5px);
-  border-color: #ff2d7a;
-  box-shadow: 0 15px 35px rgba(255, 45, 122, 0.08);
+    transform: translateY(-4px);
+    border-color: #ff2d7a;
+    box-shadow: 0 12px 28px rgba(255, 45, 122, 0.08);
 }
 
-/* ===== Card Icon ===== */
+/* Resume card base color only */
+.analyzer-card--resume {
+    background-color: #111426;
+}
+
+/* Keep LinkedIn and GitHub base colors unchanged */
+.analyzer-card--linkedin,
+.analyzer-card--github {
+    background-color: #111522;
+}
+
+/* =========================================
+   FULL-CARD GIF BACKGROUNDS
+   ========================================= */
+
+.analyzer-card__background-gif {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    opacity: 1;
+    filter: none;
+    transform: none;
+
+    pointer-events: none;
+
+    transition: transform 0.4s ease;
+}
+
+/* Light overlay: keep GIFs visible */
+.analyzer-card__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    background: linear-gradient(
+        180deg,
+        rgba(9, 11, 22, 0.06) 0%,
+        rgba(9, 11, 22, 0.08) 48%,
+        rgba(9, 11, 22, 0.48) 100%
+    );
+
+    pointer-events: none;
+}
+
+/* Resume card gets a slightly darker navy tint,
+   without changing LinkedIn/GitHub GIF brightness */
+.analyzer-card--resume .analyzer-card__overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(13, 16, 32, 0.12) 0%,
+        rgba(13, 16, 32, 0.18) 48%,
+        rgba(13, 16, 32, 0.60) 100%
+    );
+}
+
+.analyzer-card:hover .analyzer-card__background-gif {
+    transform: scale(1.035);
+}
+
+/* =========================================
+   CARD CONTENT
+   ========================================= */
+
+.analyzer-card__content {
+    position: relative;
+    z-index: 2;
+
+    flex: 1;
+    width: 100%;
+    min-height: 355px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    padding: 18px 24px 22px;
+}
+
+/* =========================================
+   OPTIONAL ICON
+   ========================================= */
+
 .analyzer-icon {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
-  margin-bottom: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #343044;
-  border-radius: 17px;
-  background: #24202e;
-  font-size: 27px;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+
+    margin-bottom: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #343044;
+    border-radius: 17px;
+
+    background: #24202e;
+    font-size: 27px;
 }
 
 .analyzer-icon.linkedin {
-  background: rgba(10, 102, 194, 0.12);
+    background: rgba(10, 102, 194, 0.12);
 }
 
 .analyzer-icon.github {
-  background: #222631;
+    background: #222631;
 }
 
-/* ===== Tag and Text ===== */
+/* =========================================
+   TAGS
+   ========================================= */
+
 .analyzer-tag {
-  margin-bottom: 10px;
-  color: #ff4b8b;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.1px;
-  line-height: 1.5;
-  text-transform: uppercase;
+    display: block;
+    margin: 0 0 10px;
+
+    color: #ff4b8b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+    line-height: 1.5;
+    text-transform: uppercase;
 }
 
-.analyzer-card h2 {
-  margin: 0 0 13px;
-  color: #f4f6fb;
-  font-size: clamp(17px, 1.25vw, 20px);
-  font-weight: 750;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
+/* Hide LinkedIn/GitHub labels */
+.analyzer-card--linkedin .analyzer-tag,
+.analyzer-card--github .analyzer-tag {
+    display: none;
 }
 
-.analyzer-card p {
-  margin: 0 0 24px;
-  color: #91a0b5;
-  font-size: 13px;
-  line-height: 1.8;
+/* Hide Resume tag too */
+.analyzer-card--resume .analyzer-tag {
+    display: none;
 }
 
-/* ===== Button aligned at bottom ===== */
-.analyzer-card button {
-  width: 100%;
-  min-height: 52px;
-  margin-top: auto;
-  padding: 13px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  border: none;
-  border-radius: 11px;
-  background: #ff2d7a;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 750;
-  cursor: pointer;
-  transition: background 0.2s ease;
+/* =========================================
+   HEADINGS
+   ========================================= */
+
+.analyzer-card__content h2 {
+    margin: 0 0 12px;
+
+    color: #ff2d83;
+    font-size: clamp(17px, 1.25vw, 21px);
+    font-weight: 750;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
-.analyzer-card button:hover {
-  background: #ed1766;
+/* =========================================
+   DESCRIPTIONS
+   ========================================= */
+
+.analyzer-card__content p {
+    max-width: 38ch;
+    margin: 0 0 20px;
+
+    color: #e0e7f3;
+    font-size: 13px;
+    line-height: 1.8;
+
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
-.analyzer-card button span {
-  font-size: 19px;
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.analyzer-card__content > button {
+    position: relative;
+    z-index: 3;
+
+    width: 100%;
+    min-height: 52px;
+    margin-top: auto;
+    padding: 13px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #ff2d7a;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    cursor: pointer;
+    box-shadow: none;
+    filter: none;
+
+    transition: background 0.2s ease;
 }
 
-/* ===== Footer ===== */
+.analyzer-card__content > button:hover {
+    background: #ed1766;
+    box-shadow: none;
+}
+
+.analyzer-card__content > button span {
+    font-size: 19px;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
 .analyzer-footer {
-  display: none;
+    display: none;
 }
 
-/* ===== Tablet ===== */
-@media (max-width: 1100px) {
-  .analyzer-dashboard {
-    padding: 48px 4%;
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
+/* =========================================
+   TABLET
+   ========================================= */
 
-  .analyzer-header {
-    grid-column: 1;
-    grid-row: 1;
-    text-align: center;
-  }
-
-  .analyzer-header h1 span {
-    display: inline;
-    margin-left: 8px;
-  }
-
-  .analyzer-header p {
-    margin: 18px auto 0;
-  }
-
-  .analyzer-grid {
-    grid-column: 1;
-    grid-row: 2;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-
-  .analyzer-card {
-    padding: 22px 18px;
-  }
-}
-
-/* ===== Mobile ===== */
-@media (max-width: 700px) {
-  .analyzer-dashboard {
-    padding: 36px 20px;
-    align-content: start;
-    gap: 28px;
-  }
-
-  .analyzer-header {
-    text-align: left;
-  }
-
-  .analyzer-header h1 {
-    font-size: 38px;
-  }
-
-  .analyzer-header h1 span {
-    display: block;
-    margin-left: 0;
-  }
-
-  .analyzer-header p {
-    font-size: 14px;
-    margin-left: 0;
-  }
-
-  .analyzer-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .analyzer-card {
-    min-height: 310px;
-    padding: 24px;
-  }
-}
-
-/* ===== Accessibility ===== */
-@media (prefers-reduced-motion: reduce) {
-  .analyzer-card,
-  .analyzer-card button {
-    transition: none;
-  }
-
-  .analyzer-card:hover {
-    transform: none;
-  }
-}
-
-/* ===== Centered Analyzer Dashboard Layout ===== */
-.analyzer-dashboard {
-  min-height: 100vh;
-  width: 100%;
-  padding: 65px 5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 42px;
-}
-
-/* Heading at top center */
-.analyzer-header {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.analyzer-eyebrow {
-  margin-bottom: 18px;
-}
-
-.analyzer-header h1 {
-  margin: 0;
-  font-size: clamp(38px, 4vw, 56px);
-  line-height: 1.15;
-  letter-spacing: -1.5px;
-}
-
-.analyzer-header h1 span {
-  display: inline;
-  margin-left: 10px;
-}
-
-.analyzer-header p {
-  max-width: 600px;
-  margin: 18px auto 0;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-/* Cards centered underneath the heading */
-.analyzer-grid {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-  align-items: stretch;
-}
-
-.analyzer-card {
-  width: 100%;
-  min-width: 0;
-  min-height: 350px;
-}
-
-/* Tablet */
 @media (max-width: 900px) {
-  .analyzer-dashboard {
-    padding: 50px 5%;
-    gap: 32px;
-  }
+    .analyzer-dashboard {
+        padding: 45px 5%;
+        gap: 32px;
+    }
 
-  .analyzer-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+    .analyzer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
 
-  .analyzer-card:last-child {
-    grid-column: 1 / -1;
-  }
+    .analyzer-card:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .analyzer-card,
+    .analyzer-card__content {
+        min-height: 330px;
+    }
 }
 
-/* Mobile */
+/* =========================================
+   MOBILE
+   ========================================= */
+
 @media (max-width: 600px) {
-  .analyzer-dashboard {
-    padding: 40px 20px;
-    gap: 28px;
-  }
+    .analyzer-dashboard {
+        min-height: 100vh;
+        padding: 36px 20px;
+        justify-content: flex-start;
+        gap: 28px;
+    }
 
-  .analyzer-header h1 {
-    font-size: 36px;
-  }
+    .analyzer-header {
+        text-align: center;
+    }
 
-  .analyzer-header h1 span {
-    display: block;
-    margin: 8px 0 0;
-  }
+    .analyzer-eyebrow {
+        margin-bottom: 14px;
+        font-size: 11px;
+    }
 
-  .analyzer-header p {
-    font-size: 14px;
-  }
+    .analyzer-header h1 {
+        font-size: 36px;
+        letter-spacing: -1px;
+    }
 
-  .analyzer-grid {
-    grid-template-columns: 1fr;
-  }
+    .analyzer-header h1 span {
+        display: block;
+        margin: 8px 0 0;
+    }
 
-  .analyzer-card:last-child {
-    grid-column: auto;
-  }
+    .analyzer-header p {
+        margin: 16px auto 0;
+        font-size: 14px;
+    }
+
+    .analyzer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .analyzer-card:last-child {
+        grid-column: auto;
+    }
+
+    .analyzer-card,
+    .analyzer-card__content {
+        min-height: 320px;
+    }
+
+    .analyzer-card__content {
+        padding: 16px 20px 20px;
+    }
+
+    .analyzer-card__content h2 {
+        font-size: 20px;
+    }
+
+    .analyzer-card__content p {
+        font-size: 13px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .analyzer-card,
+    .analyzer-card__background-gif,
+    .analyzer-card__content > button {
+        transition: none;
+    }
+
+    .analyzer-card:hover {
+        transform: none;
+    }
+
+    .analyzer-card:hover .analyzer-card__background-gif {
+        transform: none;
+    }
+}
+
+/* ===== Final visual balance for analyzer cards ===== */
+
+/* Keep GIFs visible, with a little contrast */
+.analyzer-card__background-gif {
+    opacity: 0.88;
+}
+
+/* Slightly darken the area behind text, not the whole GIF */
+.analyzer-card__overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(10, 13, 29, 0.28) 0%,
+        rgba(10, 13, 29, 0.34) 42%,
+        rgba(10, 13, 29, 0.78) 100%
+    ) !important;
+}
+
+/* Make white descriptions readable */
+.analyzer-card__content p {
+    color: #ffffff !important;
+    font-size: 13px;
+    line-height: 1.8;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+/* Keep headings clear against bright GIFs */
+.analyzer-card__content h2 {
+    color: #ff2d83;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.55);
+}
+
+/* Restore a subtle pink shadow around the buttons */
+.analyzer-card__content > button {
+    box-shadow: 0 5px 14px rgba(255, 45, 122, 0.16) !important;
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.analyzer-card__content > button:hover {
+    box-shadow: 0 7px 18px rgba(255, 45, 122, 0.24) !important;
+}
+
+/* Keep Resume in the dark navy theme */
+.analyzer-card--resume {
+    background-color: #111426 !important;
+}
+
+/* Keep the GIFs crisp */
+.analyzer-card__background-gif {
+    filter: none;
 }

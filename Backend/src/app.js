@@ -16,10 +16,12 @@ app.use(cors({
 const authRouter = require("./routes/auth.routes")
 const interviewRouter = require("./routes/interview.routes")
 const githubRouter = require("./routes/github.routes")
+const linkedinRouter = require("./routes/linkedin.routes");
 
 /* using all the routes here */
 app.use("/api/auth", authRouter)
 app.use("/api/interview", interviewRouter)
 app.use("/api/github", githubRouter)
+app.use("/api/linkedin", linkedinRouter);
 
 module.exports = app

@@ -295,3 +295,12 @@
         animation: none;
     }
 }
+.github-loading__logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+    object-fit: contain;
+    border-radius: 16px;
+}       
+

@@ -414,3 +414,56 @@
         max-height: 460px;
     }
 }
+
+/* Dashboard button stays at the top-left */
+.linkedin-analyzer {
+    position: relative;
+}
+
+.linkedin-analyzer__back {
+    position: absolute;
+    top: 28px;
+    left: 4%;
+    z-index: 5;
+}
+
+/* Match the profile content textarea to the dark UI */
+.linkedin-analyzer__textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 14px 16px;
+
+    background: #19171e !important;
+    color: #f4f2f7 !important;
+
+    border: 1px solid #3b303f !important;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.65;
+
+    outline: none;
+    resize: vertical;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.linkedin-analyzer__textarea::placeholder {
+    color: #a49baa;
+    opacity: 1;
+}
+
+.linkedin-analyzer__textarea:focus {
+    border-color: #ff4b91 !important;
+    box-shadow: 0 0 0 3px rgba(255, 75, 145, 0.12);
+}
+
+/* Responsive placement */
+@media (max-width: 768px) {
+    .linkedin-analyzer__back {
+        position: static;
+        align-self: flex-start;
+        margin: 18px 0 0 18px;
+    }
+}

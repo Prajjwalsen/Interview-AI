@@ -5,45 +5,64 @@ import "./AnalyzerPlaceholder.scss";
 
 export default function AnalyzerPlaceholder({ platform }) {
     const navigate = useNavigate();
+
     const [profileUrl, setProfileUrl] = useState("");
+    const [profileText, setProfileText] = useState("");
     const [error, setError] = useState("");
 
     const isLinkedIn = platform === "LinkedIn";
 
 
     function handleAnalyze(event) {
-        
         event.preventDefault();
         setError("");
 
         const rawValue = profileUrl.trim();
+        const content = profileText.trim();
 
+        // Both fields are mandatory.
         if (!rawValue) {
             setError("Please enter your LinkedIn profile URL.");
             return;
         }
 
-        const value = /^https?:\/\//i.test(rawValue)
+        if (!content) {
+            setError("Please paste your LinkedIn profile content.");
+            return;
+        }
+
+        // Profile content must contain at least 50 characters.
+        if (content.length < 50) {
+            setError(
+                "Please paste at least 50 characters of your LinkedIn profile content."
+            );
+            return;
+        }
+
+        const normalizedValue = /^https?:\/\//i.test(rawValue)
             ? rawValue
             : `https://${rawValue}`;
 
         let parsedUrl;
 
         try {
-            parsedUrl = new URL(value);
+            parsedUrl = new URL(normalizedValue);
         } catch {
             setError("Please enter a valid LinkedIn profile URL.");
             return;
         }
 
         const hostname = parsedUrl.hostname.toLowerCase();
-        const isLinkedIn =
+
+        const validHost =
             hostname === "linkedin.com" ||
             hostname === "www.linkedin.com";
 
-        const isProfileUrl = /^\/in\/[^/]+\/?$/.test(parsedUrl.pathname);
+        const validProfilePath = /^\/in\/[^/]+\/?$/.test(
+            parsedUrl.pathname
+        );
 
-        if (!isLinkedIn || !isProfileUrl) {
+        if (!validHost || !validProfilePath) {
             setError(
                 "Enter a valid profile URL, such as linkedin.com/in/your-profile"
             );
@@ -51,7 +70,10 @@ export default function AnalyzerPlaceholder({ platform }) {
         }
 
         navigate("/linkedin-analyzer/loading", {
-            state: { profileUrl: value }
+            state: {
+                profileUrl: parsedUrl.href,
+                profileText: content
+            }
         });
     }
 
@@ -63,7 +85,9 @@ export default function AnalyzerPlaceholder({ platform }) {
                     <h1>
                         {platform} <span>Analyzer</span>
                     </h1>
+
                     <p>This analyzer is being prepared.</p>
+
                     <button
                         type="button"
                         onClick={() => navigate("/")}
@@ -92,20 +116,15 @@ export default function AnalyzerPlaceholder({ platform }) {
                         alt="AI robots analyzing a LinkedIn profile"
                         className="linkedin-analyzer__image"
                     />
-
-                    <div className="linkedin-analyzer__visual-label">
-                        <span className="linkedin-analyzer__live-dot" />
-                        AI PROFILE INTELLIGENCE
-                    </div>
                 </div>
 
                 <div className="linkedin-analyzer__content">
                     <span className="linkedin-analyzer__eyebrow">
-                        INTERVIEW AI MASTER 
+                        INTERVIEW AI MASTER
                     </span>
 
                     <h1>
-                        LinkedIn <span>Analyzer</span>
+                        LinkedIn<span>ator</span>
                     </h1>
 
                     <p className="linkedin-analyzer__description">
@@ -117,7 +136,7 @@ export default function AnalyzerPlaceholder({ platform }) {
                     <form
                         className="linkedin-analyzer__form"
                         onSubmit={handleAnalyze}
-                        noValidate 
+                        noValidate
                     >
                         <label htmlFor="linkedin-profile-url">
                             LINKEDIN PROFILE URL
@@ -125,17 +144,43 @@ export default function AnalyzerPlaceholder({ platform }) {
 
                         <div className="linkedin-analyzer__input-wrap">
                             <span aria-hidden="true">in</span>
+
                             <input
                                 id="linkedin-profile-url"
                                 type="text"
                                 value={profileUrl}
-                                onChange={(event) =>
-                                    setProfileUrl(event.target.value)
-                                }
+                                onChange={(event) => {
+                                    setProfileUrl(event.target.value);
+                                    setError("");
+                                }}
                                 placeholder="https://www.linkedin.com/in/your-profile"
                                 autoComplete="url"
                             />
                         </div>
+
+                        <label htmlFor="linkedin-profile-content">
+                            PROFILE CONTENT
+                        </label>
+
+                        <textarea
+                            id="linkedin-profile-content"
+                            className="linkedin-analyzer__textarea"
+                            value={profileText}
+                            onChange={(event) => {
+                                setProfileText(event.target.value);
+                                setError("");
+                            }}
+                            placeholder="Paste your LinkedIn headline, About section, skills, experience, and projects here..."
+                            rows={7}
+                            required
+                        />
+
+                        <p className="linkedin-analyzer__note">
+                            You can provide a LinkedIn URL, profile content,
+                            or both. For more useful recommendations, include
+                            your headline, About section, skills, experience,
+                            or projects.
+                        </p>
 
                         {error && (
                             <p
@@ -160,10 +205,12 @@ export default function AnalyzerPlaceholder({ platform }) {
                             <span>01</span>
                             <p>Profile overview</p>
                         </div>
+
                         <div>
                             <span>02</span>
                             <p>Skills & experience</p>
                         </div>
+
                         <div>
                             <span>03</span>
                             <p>Improvement insights</p>
@@ -171,8 +218,8 @@ export default function AnalyzerPlaceholder({ platform }) {
                     </div>
 
                     <p className="linkedin-analyzer__note">
-                        Only analyze profiles and information you are
-                        authorized to access.
+                        Only submit profile information you are authorized
+                        to share.
                     </p>
                 </div>
             </section>

@@ -8,8 +8,7 @@ const analyzers = [
         title: "Resume Analyzer",
         description:
             "Analyze your resume, identify skill gaps, and prepare for your next opportunity.",
-        icon: "📄",
-        tag: "PDF Resume",
+        gif: "/Resume.gif",
         path: "/resume-analyzer",
     },
     {
@@ -17,8 +16,7 @@ const analyzers = [
         title: "LinkedIn Profile Analyzer",
         description:
             "Review your professional profile and discover opportunities to improve it.",
-        icon: "💼",
-        tag: "LinkedIn Profile",
+        gif: "/Linkedin.gif",
         path: "/linkedin-analyzer",
     },
     {
@@ -26,8 +24,7 @@ const analyzers = [
         title: "GitHub Profile Analyzer",
         description:
             "Evaluate your developer profile, repositories, and project presentation.",
-        icon: "⌘",
-        tag: "GitHub Profile",
+        gif: "/Github.gif",
         path: "/github-analyzer",
     },
 ];
@@ -39,7 +36,7 @@ export default function AnalyzerDashboard() {
         <main className="analyzer-dashboard">
             <header className="analyzer-header">
                 <span className="analyzer-eyebrow">
-                    YOUR CAREER WORKSPACE
+                    INTERVIEW AI MASTER
                 </span>
 
                 <h1>
@@ -54,23 +51,37 @@ export default function AnalyzerDashboard() {
 
             <section className="analyzer-grid">
                 {analyzers.map((item) => (
-                    <article className="analyzer-card" key={item.id}>
-                        <div className={`analyzer-icon ${item.id}`}>
-                            {item.icon}
+                    <article
+                        className={`analyzer-card analyzer-card--${item.id}`}
+                        key={item.id}
+                    >
+                        <img
+                            src={item.gif}
+                            alt=""
+                            aria-hidden="true"
+                            className="analyzer-card__background-gif"
+                        />
+
+                        <div className="analyzer-card__overlay" />
+
+                        <div className="analyzer-card__content">
+                            {item.tag && (
+                                <span className="analyzer-tag">
+                                    {item.tag}
+                                </span>
+                            )}
+
+                            <h2>{item.title}</h2>
+
+                            <p>{item.description}</p>
+
+                            <button
+                                type="button"
+                                onClick={() => navigate(item.path)}
+                            >
+                                Open Analyzer <span>→</span>
+                            </button>
                         </div>
-
-                        <span className="analyzer-tag">{item.tag}</span>
-
-                        <h2>{item.title}</h2>
-
-                        <p>{item.description}</p>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate(item.path)}
-                        >
-                            Open Analyzer <span>→</span>
-                        </button>
                     </article>
                 ))}
             </section>
